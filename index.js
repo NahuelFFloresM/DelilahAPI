@@ -1,6 +1,7 @@
 let express = require('express');
 var app = express();
 var db = require('./server.js');
+var middlewares = require('./middleware/wrapper.js');
 
 //DEFINED ROUTES TO THEIR FILES
 const userRoutes = require('./routes/usuario');
