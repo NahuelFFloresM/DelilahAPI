@@ -1,13 +1,16 @@
 let express = require('express');
-var app = express();
-var db = require('./server.js');
-var middlewares = require('./middleware/wrapper.js');
+let app = express();
+let db = require('./server.js');
+let middlewares = require('./middleware/wrapper.js');
+const bodyParser = require('body-parser');
+
 
 //DEFINED ROUTES TO THEIR FILES
 const userRoutes = require('./routes/usuario');
 const pedidoRoutes = require('./routes/pedido');
 const productRoutes = require('./routes/product');
 
+app.use(bodyParser.json());
 app.get('/', (req,res) => res.status(200).json('Welcome to Delilah API'));
 app.use('/user',userRoutes);
 app.use('/pedido',pedidoRoutes);
