@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../server.js');
-var middlewares = require('../middleware/wrapper.js');
+const bcrypt = require('bcrypt');
+let middlewares = require('../middleware/wrapper.js');
+const secret = "passsecret";
 
 
 router.get('/', middlewares.isJsonUser,(req,res) => {
@@ -26,7 +27,23 @@ router.get('/:id',(req,res) => {
     });
 });
 
-router.post('/',(req,res) => {
+router.post('/login',middlewares.isJsonUser,(req,res) => {
+    const query = `SELECT id FROM usuario AS us WHERE us.nombre ='${req.body.email}' AND us.contraseña ='${req.body.contrasenia}'`
+    db.query(query, {raw:true, type: db.QueryTypes.SELECT}).then(response => {
+        if (response){
+            try {
+                var token = jwt.sign(req.body.user, secret, { algorithm: 'RS256'});
+                res.status(200).json({token: token,message:'Loggin Succesfull'});
+              } catch(err) {
+                res.status(200).json({error: err});
+              }
+        } else {
+            res.status(400).json({message:"Wrong Email or Password"});
+        }
+    });
+});
+
+router.post('/register',(req,res) => {
     const insert = "INSERT INTO usuario (nombre,apellido,nickname,direccion,email,telefono,contraseña) ";
     const value = `VALUES (${req.body.nombre},${req.body.apellido},${req.body.nickname},${req.body.direccion},${req.body.email},${req.body.telefono},${req.body.contraseña});`
     const query = insert+value;

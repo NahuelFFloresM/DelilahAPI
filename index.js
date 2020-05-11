@@ -8,6 +8,7 @@ const userRoutes = require('./routes/usuario');
 const pedidoRoutes = require('./routes/pedido');
 const productRoutes = require('./routes/product');
 
+app.use(bodyParser.json());
 app.get('/', (req,res) => res.status(200).json('Welcome to Delilah API'));
 app.use('/user',userRoutes);
 app.use('/pedido',pedidoRoutes);
